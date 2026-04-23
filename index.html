@@ -405,18 +405,19 @@
   .chart-pos-name { text-align: center; font-size: 9px; letter-spacing: 3px; color: var(--muted); margin-bottom: 10px; }
 
   .chart-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  .chart-col-headers { display: flex; margin-left: 26px; margin-bottom: 3px; }
-  .chart-col-hdr { width: 36px; text-align: center; font-size: 10px; color: var(--muted); font-weight: 700; }
+  .chart-col-headers { display: flex; margin-left: 30px; margin-bottom: 4px; }
+  .chart-col-hdr { width: 48px; text-align: center; font-size: 11px; color: var(--muted); font-weight: 700; }
   .chart-row { display: flex; align-items: center; margin-bottom: 3px; }
-  .chart-row-hdr { width: 26px; text-align: center; font-size: 10px; color: var(--muted); font-weight: 700; }
+  .chart-row-hdr { width: 30px; text-align: center; font-size: 11px; color: var(--muted); font-weight: 700; }
   .chart-cell {
-    width: 36px; height: 36px; border-radius: 4px;
+    width: 48px; height: 38px; border-radius: 4px;
     display: flex; align-items: center; justify-content: center;
     cursor: pointer; transition: all .12s; border: 1px solid transparent;
+    font-size: 9px; font-weight: 700; letter-spacing: 0;
   }
-  .chart-cell.is-pair { border-color: rgba(255,255,255,0.18); }
-  .chart-cell.is-selected { transform: scale(1.2); border: 2px solid #fff !important; z-index: 10; position: relative; }
-  .chart-cell.is-filtered { opacity: 0.12; }
+  .chart-cell.is-pair { border-color: rgba(255,255,255,0.2); }
+  .chart-cell.is-selected { transform: scale(1.15); border: 2px solid #fff !important; z-index: 10; position: relative; box-shadow: 0 0 10px #fff6; }
+  .chart-cell.is-filtered { opacity: 0.1; }
 
   .chart-legend { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin: 8px 0 10px; }
   .chart-legend-item { display: flex; align-items: center; gap: 4px; font-size: 8px; letter-spacing: 1px; color: var(--muted); }
@@ -1055,10 +1056,10 @@ function spawnConfetti() {
 // CHART SCREEN
 // ════════════════════════════════════════════════
 const CHART_META = {
-  R: { bg: "rgba(22,163,74,0.75)",  glow: "#22c55e", label: "RAISE", word: "RAISE / OPEN", sub: "Open pot — standard TAG play" },
-  T: { bg: "rgba(29,78,216,0.75)",  glow: "#60a5fa", label: "3-BET", word: "3-BET",        sub: "Re-raise facing an open" },
-  C: { bg: "rgba(180,83,9,0.75)",   glow: "#fbbf24", label: "CALL",  word: "CALL",         sub: "Flat call — proceed with caution" },
-  F: { bg: "rgba(55,65,81,0.5)",    glow: "#6b7280", label: "FOLD",  word: "FOLD",         sub: "Muck it. Wait for better spots." },
+  R: { bg: "rgba(22,163,74,0.88)",  glow: "#22c55e", textColor: "rgba(255,255,255,0.95)", label: "RAISE", word: "RAISE / OPEN", sub: "Open pot — standard TAG play" },
+  T: { bg: "rgba(29,78,216,0.88)",  glow: "#60a5fa", textColor: "rgba(255,255,255,0.95)", label: "3-BET", word: "3-BET",        sub: "Re-raise facing an open" },
+  C: { bg: "rgba(180,83,9,0.88)",   glow: "#fbbf24", textColor: "rgba(255,255,255,0.95)", label: "CALL",  word: "CALL",         sub: "Flat call — proceed with caution" },
+  F: { bg: "rgba(55,65,81,0.55)",   glow: "#6b7280", textColor: "rgba(255,255,255,0.28)", label: "FOLD",  word: "FOLD",         sub: "Muck it. Wait for better spots." },
 };
 
 let chartPos = "BTN";
@@ -1105,7 +1106,9 @@ function buildChartGrid() {
         (isSelected ? " is-selected" : "") +
         (isFiltered ? " is-filtered" : "");
       cell.style.background = m.bg;
-      if (isSelected) cell.style.boxShadow = `0 0 8px ${m.glow}`;
+      cell.style.color = m.textColor;
+      if (isSelected) cell.style.boxShadow = `0 0 10px ${m.glow}`;
+      cell.textContent = hk;
       cell.dataset.hk = hk;
       cell.addEventListener("click", () => {
         chartSelectedHand = chartSelectedHand === hk ? null : hk;
