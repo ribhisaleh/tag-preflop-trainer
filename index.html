@@ -381,6 +381,80 @@
   /* Suit colors */
   .suit-h, .suit-d { color: #dc2626; }
   .suit-s, .suit-c { color: #111; }
+
+  /* ── CHART SCREEN ── */
+  .chart-open-btn {
+    width: 100%; padding: 12px; margin-top: 10px;
+    background: transparent; border: 1px solid var(--border);
+    color: var(--muted); font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px; letter-spacing: 3px;
+    border-radius: 10px; cursor: pointer; transition: all .15s;
+  }
+  .chart-open-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+  .chart-topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .chart-screen-title { font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 4px; color: var(--gold); }
+  .chart-pos-row { display: flex; justify-content: center; gap: 5px; flex-wrap: wrap; margin-bottom: 6px; }
+  .chart-pos-btn {
+    padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border);
+    background: transparent; color: var(--muted);
+    font-size: 10px; font-weight: 700; letter-spacing: 2px;
+    cursor: pointer; font-family: inherit; transition: all .15s;
+  }
+  .chart-pos-btn.active { border-color: var(--gold); background: rgba(245,158,11,0.12); color: var(--gold); }
+  .chart-pos-name { text-align: center; font-size: 9px; letter-spacing: 3px; color: var(--muted); margin-bottom: 10px; }
+
+  .chart-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .chart-col-headers { display: flex; margin-left: 18px; margin-bottom: 2px; }
+  .chart-col-hdr { width: 24px; text-align: center; font-size: 7px; color: var(--muted); font-weight: 700; }
+  .chart-row { display: flex; align-items: center; margin-bottom: 2px; }
+  .chart-row-hdr { width: 18px; text-align: center; font-size: 7px; color: var(--muted); font-weight: 700; }
+  .chart-cell {
+    width: 24px; height: 24px; border-radius: 2px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all .12s; border: 1px solid transparent;
+  }
+  .chart-cell.is-pair { border-color: rgba(255,255,255,0.12); }
+  .chart-cell.is-selected { transform: scale(1.3); border: 2px solid #fff !important; z-index: 10; position: relative; }
+  .chart-cell.is-filtered { opacity: 0.12; }
+
+  .chart-legend { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin: 8px 0 10px; }
+  .chart-legend-item { display: flex; align-items: center; gap: 4px; font-size: 8px; letter-spacing: 1px; color: var(--muted); }
+  .chart-legend-dot { width: 7px; height: 7px; border-radius: 1px; }
+
+  .chart-verdict {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px 14px; margin-bottom: 10px;
+    min-height: 56px; display: flex; flex-direction: column;
+    justify-content: center; transition: all .2s;
+  }
+  .chart-verdict-empty { font-size: 9px; color: var(--muted); letter-spacing: 2px; text-align: center; }
+  .chart-verdict-hand { font-size: 20px; font-weight: 700; letter-spacing: 3px; margin-bottom: 2px; }
+  .chart-verdict-type { font-size: 8px; color: var(--muted); margin-left: 6px; letter-spacing: 2px; font-weight: 400; }
+  .chart-verdict-action { font-size: 15px; font-weight: 700; letter-spacing: 3px; margin-bottom: 2px; }
+  .chart-verdict-sub { font-size: 9px; color: var(--muted); letter-spacing: 1px; }
+
+  .chart-filter-label { font-size: 9px; letter-spacing: 3px; color: var(--muted); text-align: center; margin-bottom: 6px; }
+  .chart-filter-row { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+  .chart-filter-btn {
+    display: flex; align-items: center; gap: 5px;
+    padding: 5px 9px; border-radius: 6px; border: 1px solid var(--border);
+    background: transparent; cursor: pointer; transition: all .15s; font-family: inherit;
+  }
+  .chart-filter-btn.dimmed { opacity: 0.25; }
+  .chart-filter-dot { width: 7px; height: 7px; border-radius: 1px; }
+  .chart-filter-text { font-size: 9px; font-weight: 700; letter-spacing: 1px; }
+  .chart-filter-count { font-size: 9px; font-weight: 700; margin-left: 2px; }
+
+  .peek-chart-btn {
+    width: 100%; margin-top: 6px; padding: 8px;
+    background: transparent; border: 1px solid var(--border);
+    color: var(--muted); font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px; letter-spacing: 3px;
+    border-radius: 6px; cursor: pointer; transition: all .15s; display: none;
+  }
+  .peek-chart-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .peek-chart-btn.show { display: block; }
 </style>
 </head>
 <body>
@@ -408,6 +482,7 @@
     <div class="pos-filter-row" id="posFilterRow"></div>
 
     <button class="start-btn" id="startBtn">START TRAINING</button>
+    <button class="chart-open-btn" id="chartOpenBtn">📊 VIEW RANGE CHART</button>
   </div>
 
   <!-- ══════════════════ TRAINER SCREEN ══════════════════ -->
@@ -428,6 +503,7 @@
           <div class="stat-key">✗ WRONG</div>
         </div>
       </div>
+      <button class="quit-btn" id="chartTrainerBtn" title="View Range Chart">📊</button>
     </div>
 
     <div class="progress-bar-wrap">
@@ -465,11 +541,43 @@
     <div class="feedback-bar" id="feedbackBar">
       <div class="fb-title" id="fbTitle"></div>
       <div class="fb-detail" id="fbDetail"></div>
+      <button class="peek-chart-btn" id="chartPeekBtn">📊 VIEW IN CHART</button>
     </div>
 
     <button class="next-btn" id="nextBtn">NEXT HAND →</button>
 
     <div style="text-align:center; margin-top:12px; font-size:9px; color:#1e293b; letter-spacing:2px;" id="handCounter"></div>
+  </div>
+
+  <!-- ══════════════════ CHART SCREEN ══════════════════ -->
+  <div class="screen" id="screenChart">
+    <div class="chart-topbar">
+      <button class="quit-btn" id="chartBackBtn">← BACK</button>
+      <div class="chart-screen-title">RANGE CHART</div>
+      <div style="width:60px"></div>
+    </div>
+
+    <div class="chart-pos-row" id="chartPosRow"></div>
+    <div class="chart-pos-name" id="chartPosName"></div>
+
+    <div class="chart-scroll">
+      <div class="chart-col-headers" id="chartColHeaders"></div>
+      <div id="chartGridRows"></div>
+    </div>
+
+    <div class="chart-legend">
+      <div class="chart-legend-item"><div class="chart-legend-dot" style="background:#22c55e"></div>RAISE</div>
+      <div class="chart-legend-item"><div class="chart-legend-dot" style="background:#60a5fa"></div>3-BET</div>
+      <div class="chart-legend-item"><div class="chart-legend-dot" style="background:#fbbf24"></div>CALL</div>
+      <div class="chart-legend-item"><div class="chart-legend-dot" style="background:#6b7280"></div>FOLD</div>
+    </div>
+
+    <div class="chart-verdict" id="chartVerdict">
+      <div class="chart-verdict-empty">TAP ANY HAND TO SEE ACTION</div>
+    </div>
+
+    <div class="chart-filter-label">FILTER BY ACTION</div>
+    <div class="chart-filter-row" id="chartFilterRow"></div>
   </div>
 
   <!-- ══════════════════ SUMMARY SCREEN ══════════════════ -->
@@ -726,6 +834,7 @@ function loadQuestion() {
 
   // Hide next
   document.getElementById("nextBtn").classList.remove("show");
+  document.getElementById("chartPeekBtn").classList.remove("show");
 }
 
 function renderCards(hand) {
@@ -843,6 +952,7 @@ document.querySelectorAll(".action-btn").forEach(btn => {
       nextBtn.textContent = "NEXT HAND →";
     }
     nextBtn.classList.add("show");
+    document.getElementById("chartPeekBtn").classList.add("show");
   });
 });
 
@@ -940,6 +1050,162 @@ function spawnConfetti() {
     el.addEventListener("animationend", () => el.remove());
   }
 }
+
+// ════════════════════════════════════════════════
+// CHART SCREEN
+// ════════════════════════════════════════════════
+const CHART_META = {
+  R: { bg: "rgba(22,163,74,0.75)",  glow: "#22c55e", label: "RAISE", word: "RAISE / OPEN", sub: "Open pot — standard TAG play" },
+  T: { bg: "rgba(29,78,216,0.75)",  glow: "#60a5fa", label: "3-BET", word: "3-BET",        sub: "Re-raise facing an open" },
+  C: { bg: "rgba(180,83,9,0.75)",   glow: "#fbbf24", label: "CALL",  word: "CALL",         sub: "Flat call — proceed with caution" },
+  F: { bg: "rgba(55,65,81,0.5)",    glow: "#6b7280", label: "FOLD",  word: "FOLD",         sub: "Muck it. Wait for better spots." },
+};
+
+let chartPos = "BTN";
+let chartSelectedHand = null;
+let chartFilter = null;
+let chartPrevScreen = "screenHome";
+
+function getChartHandKey(i, j) {
+  if (i === j) return RANKS[i] + RANKS[i];
+  if (i < j)  return RANKS[i] + RANKS[j] + "s";
+  return RANKS[j] + RANKS[i] + "o";
+}
+
+function countChartActions() {
+  const counts = { R: 0, T: 0, C: 0, F: 0 };
+  for (let i = 0; i < 13; i++)
+    for (let j = 0; j < 13; j++)
+      counts[getAction(chartPos, getChartHandKey(i, j))]++;
+  return counts;
+}
+
+function buildChartColHeaders() {
+  document.getElementById("chartColHeaders").innerHTML =
+    RANKS.map(r => `<div class="chart-col-hdr">${r}</div>`).join("");
+}
+
+function buildChartGrid() {
+  const container = document.getElementById("chartGridRows");
+  container.innerHTML = "";
+  for (let i = 0; i < 13; i++) {
+    const row = document.createElement("div");
+    row.className = "chart-row";
+    row.innerHTML = `<div class="chart-row-hdr">${RANKS[i]}</div>`;
+    for (let j = 0; j < 13; j++) {
+      const hk = getChartHandKey(i, j);
+      const act = getAction(chartPos, hk);
+      const m = CHART_META[act];
+      const isSelected = chartSelectedHand === hk;
+      const isFiltered = chartFilter && act !== chartFilter;
+
+      const cell = document.createElement("div");
+      cell.className = "chart-cell" +
+        (i === j ? " is-pair" : "") +
+        (isSelected ? " is-selected" : "") +
+        (isFiltered ? " is-filtered" : "");
+      cell.style.background = m.bg;
+      if (isSelected) cell.style.boxShadow = `0 0 8px ${m.glow}`;
+      cell.dataset.hk = hk;
+      cell.addEventListener("click", () => {
+        chartSelectedHand = chartSelectedHand === hk ? null : hk;
+        buildChartGrid();
+        updateChartVerdict();
+      });
+      row.appendChild(cell);
+    }
+    container.appendChild(row);
+  }
+}
+
+function updateChartVerdict() {
+  const box = document.getElementById("chartVerdict");
+  if (!chartSelectedHand) {
+    box.style.cssText = "background:var(--bg2);border:1px solid var(--border);box-shadow:none;";
+    box.innerHTML = `<div class="chart-verdict-empty">TAP ANY HAND TO SEE ACTION</div>`;
+    return;
+  }
+  const act = getAction(chartPos, chartSelectedHand);
+  const m = CHART_META[act];
+  const type = chartSelectedHand.length === 2 ? "PAIR" : chartSelectedHand.endsWith("s") ? "SUITED" : "OFFSUIT";
+  box.style.cssText = `background:${m.bg};border:1px solid ${m.glow};box-shadow:0 0 16px ${m.glow}22;`;
+  box.innerHTML = `
+    <div class="chart-verdict-hand">${chartSelectedHand}<span class="chart-verdict-type">${type}</span></div>
+    <div class="chart-verdict-action" style="color:${m.glow}">${m.word}</div>
+    <div class="chart-verdict-sub">${m.sub}</div>
+  `;
+}
+
+function buildChartPosRow() {
+  const container = document.getElementById("chartPosRow");
+  container.innerHTML = POSITIONS.map(p =>
+    `<button class="chart-pos-btn ${p.id === chartPos ? "active" : ""}" data-pos="${p.id}">${p.id}</button>`
+  ).join("");
+  container.querySelectorAll(".chart-pos-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      chartPos = btn.dataset.pos;
+      chartSelectedHand = null;
+      chartFilter = null;
+      buildChartPosRow();
+      document.getElementById("chartPosName").textContent = POSITIONS.find(p => p.id === chartPos).full;
+      buildChartGrid();
+      updateChartVerdict();
+      buildChartFilterRow();
+    });
+  });
+}
+
+function buildChartFilterRow() {
+  const counts = countChartActions();
+  const container = document.getElementById("chartFilterRow");
+  container.innerHTML = Object.entries(CHART_META).map(([k, m]) =>
+    `<button class="chart-filter-btn ${chartFilter && chartFilter !== k ? "dimmed" : ""}" data-act="${k}"
+       style="border-color:${chartFilter === k ? m.glow : "var(--border)"};background:${chartFilter === k ? m.bg : "transparent"};">
+      <div class="chart-filter-dot" style="background:${m.glow}"></div>
+      <span class="chart-filter-text" style="color:${m.glow}">${m.label}</span>
+      <span class="chart-filter-count" style="color:${m.glow}">${counts[k]}</span>
+    </button>`
+  ).join("");
+  container.querySelectorAll(".chart-filter-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      chartFilter = chartFilter === btn.dataset.act ? null : btn.dataset.act;
+      buildChartGrid();
+      buildChartFilterRow();
+    });
+  });
+}
+
+function openChart(fromScreen, highlightHand, highlightPos) {
+  chartPrevScreen = fromScreen;
+  if (highlightPos) chartPos = highlightPos;
+  if (highlightHand !== undefined) chartSelectedHand = highlightHand;
+  chartFilter = null;
+  buildChartColHeaders();
+  buildChartPosRow();
+  document.getElementById("chartPosName").textContent = POSITIONS.find(p => p.id === chartPos).full;
+  buildChartGrid();
+  updateChartVerdict();
+  buildChartFilterRow();
+  showScreen("screenChart");
+}
+
+document.getElementById("chartBackBtn").addEventListener("click", () => {
+  showScreen(chartPrevScreen);
+});
+
+document.getElementById("chartOpenBtn").addEventListener("click", () => {
+  openChart("screenHome", null, null);
+});
+
+document.getElementById("chartTrainerBtn").addEventListener("click", () => {
+  const q = questionQueue[currentQ];
+  openChart("screenTrainer", answered && q ? q.hand.key : null, q ? q.pos : null);
+});
+
+document.getElementById("chartPeekBtn").addEventListener("click", () => {
+  const q = questionQueue[currentQ];
+  openChart("screenTrainer", q.hand.key, q.pos);
+});
 
 const styleEl = document.createElement("style");
 styleEl.textContent = `
