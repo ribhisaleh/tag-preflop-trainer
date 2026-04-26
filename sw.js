@@ -1,4 +1,4 @@
-const CACHE = 'tag-trainer-v3';
+const CACHE = 'tag-trainer-v4';
 const FONTS = 'https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;700&display=swap';
 
 self.addEventListener('install', e => {
