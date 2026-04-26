@@ -34,6 +34,16 @@ docs/
 - **iOS Safari:** Share → Add to Home Screen
 - **Android Chrome:** Menu → Add to Home Screen
 
+## Screens
+- **Home** — mode selector (20/50/100 hands), position filter, links to all tools
+- **Trainer** — main TAG 6-max drill (Raise / 3-Bet / Call / Fold)
+- **Range Chart** — interactive 13×13 grid by position with action filter
+- **Rush & Cash Drill** — NL2 Rush & Cash drill: RFI / vs Raise / Squeeze / All modes, 20 hands
+- **Spin & Gold Chart** — push/fold reference chart with stack depth selector (4–25BB) and push/call toggle
+
+## Service Worker Cache
+Current version: `tag-trainer-v4` (in `sw.js`). Bump this whenever deploying changes that need to bust the cache on existing installs.
+
 ## Enhancing
 Before making changes: run brainstorming skill → writing-plans skill → executing-plans skill.
 See `docs/todo.md` for the enhancement backlog.
